@@ -1,0 +1,202 @@
+
+SQL> SELECT * FROM (
+  2      SELECT Module.Module_Name, MAX(Assessment.Deadline) AS Latest_Deadline
+  3      FROM Assessment
+  4      JOIN Module ON Assessment.Module_ID = Module.Module_ID
+  5      GROUP BY Module.Module_Name
+  6      ORDER BY Latest_Deadline DESC
+  7  )
+  8  WHERE ROWNUM = 1;
+
+MODULE_NAME          LATEST_DEADLINE
+-------------------- --------------------
+Programming          30-NOV-2023
+
+
+
+
+
+SQL> SELECT *
+  2  FROM (
+  3      SELECT Student.Student_Name, SUM(Result.Total_Marks) AS Total_Score
+  4      FROM Student
+  5      JOIN Result ON Student.Student_ID = Result.Student_ID
+  6      GROUP BY Student.Student_Name
+  7      ORDER BY Total_Score DESC
+  8  )
+  9  WHERE ROWNUM <= 3;
+
+STUDENT_NAME                   TOTAL_SCORE
+------------------------------ -----------
+Maya Sharma                             95
+Santosh Singh                           90
+Sita Rai                                88
+
+
+
+
+
+SQL> SELECT Program.Program_Name, COUNT(Assessment.Assessment_No) AS Total_Assessments, AVG(Result.Total_Marks) AS Average_Score
+  2  FROM Program
+  3  JOIN Student ON Program.Program_ID = Student.Program_ID
+  4  JOIN Result ON Student.Student_ID = Result.Student_ID
+  5  JOIN Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+  6  GROUP BY Program.Program_Name;
+
+PROGRAM_NAME         TOTAL_ASSESSMENTS AVERAGE_SCORE
+-------------------- ----------------- -------------
+ACCA                                 1            95
+A level                              1            70
+Computing                            2          82.5
+Multimedia                           1            85
+AI                                   1            80
+Networking                           1            88
+
+6 rows selected.
+
+
+
+
+SQL> SELECT Student.Student_Name, Result.Total_Marks
+  2  FROM Student
+  3  JOIN Result ON Student.Student_ID = Result.Student_ID
+  4  JOIN Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+  5  JOIN Module ON Assessment.Module_ID = Module.Module_ID
+  6  WHERE Module.Module_Name = 'Database'
+  7  AND Result.Total_Marks > (
+  8      SELECT AVG(Result.Total_Marks)
+  9      FROM Result
+ 10      JOIN Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+ 11      JOIN Module ON Assessment.Module_ID = Module.Module_ID
+ 12      WHERE Module.Module_Name = 'Database');
+
+no rows selected
+
+SQL> SELECT
+  2      Student.Student_Name,
+  3      Result.Total_Marks
+  4  FROM
+  5      Student
+  6  JOIN
+  7      Result ON Student.Student_ID = Result.Student_ID
+  8  JOIN
+  9      Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+ 10  JOIN
+ 11      Module ON Assessment.Module_ID = Module.Module_ID
+ 12  WHERE
+ 13      Module.Module_Name = 'Database'
+ 14      AND Result.Total_Marks > (
+ 15          SELECT
+ 16              AVG(R2.Total_Marks)
+ 17          FROM
+ 18              Result R2
+ 19          JOIN
+ 20              Assessment A2 ON R2.Assessment_ID = A2.Assessment_No
+ 21          JOIN
+ 22              Module M2 ON A2.Module_ID = M2.Module_ID
+ 23          WHERE
+ 24              M2.Module_Name = 'Database'
+ 25      );
+
+no rows selected
+
+SQL> SELECT AVG(Result.Total_Marks)
+  2  FROM Result
+  3  JOIN Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+  4  JOIN Module ON Assessment.Module_ID = Module.Module_ID
+  5  WHERE Module.Module_Name = 'Database';
+
+AVG(RESULT.TOTAL_MARKS)
+-----------------------
+                     85
+
+SQL> SELECT Student.Student_Name, Result.Total_Marks
+  2  FROM Student
+  3  JOIN Result ON Student.Student_ID = Result.Student_ID
+  4  JOIN Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+  5  JOIN Module ON Assessment.Module_ID = Module.Module_ID
+  6  WHERE Module.Module_Name = 'Database';
+
+STUDENT_NAME                   TOTAL_MARKS
+------------------------------ -----------
+Satish Chad                             85
+
+
+
+
+
+
+SQL> SELECT Student.Student_Name,
+  2      CASE
+  3          WHEN SUM(Result.Total_Marks) >= 50 THEN 'Passed'
+  4          ELSE 'Failed'
+  5      END AS Remarks
+  6  FROM Student
+  7  JOIN Result ON Student.Student_ID = Result.Student_ID
+  8  JOIN Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+  9  JOIN Module ON Assessment.Module_ID = Module.Module_ID
+ 10  GROUP BY Student.Student_Name, Module.Module_Name
+ 11  HAVING Module.Module_Name = '<Module_Name>';
+
+no rows selected
+
+SQL> SELECT Student.Student_Name,
+  2      CASE
+  3          WHEN SUM(Result.Total_Marks) >= 50 THEN 'Passed'
+  4          ELSE 'Failed'
+  5      END AS Remarks
+  6  FROM Student
+  7  JOIN Result ON Student.Student_ID = Result.Student_ID
+  8  JOIN Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+  9  JOIN Module ON Assessment.Module_ID = Module.Module_ID
+ 10  WHERE Module.Module_Name = '<Module_Name>'
+ 11  GROUP BY Student.Student_Name;
+
+no rows selected
+
+SQL> SELECT DISTINCT Module.Module_Name
+  2  FROM Module
+  3  JOIN Assessment ON Module.Module_ID = Assessment.Module_ID
+  4  JOIN Result ON Assessment.Assessment_No = Result.Assessment_ID;
+
+MODULE_NAME
+--------------------
+Cloud computing
+Math
+Programming
+Accounting
+Science
+Database
+Network
+
+7 rows selected.
+
+SQL> SELECT Student.Student_Name, SUM(Result.Total_Marks) AS Total_Score
+  2  FROM Student
+  3  JOIN Result ON Student.Student_ID = Result.Student_ID
+  4  JOIN Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+  5  JOIN Module ON Assessment.Module_ID = Module.Module_ID
+  6  WHERE Module.Module_Name = 'Database'
+  7  GROUP BY Student.Student_Name;
+
+STUDENT_NAME                   TOTAL_SCORE
+------------------------------ -----------
+Satish Chad                             85
+
+SQL> SELECT Student.Student_Name,
+  2      CASE
+  3          WHEN SUM(Result.Total_Marks) >= 50 THEN 'Passed'
+  4          ELSE 'Failed'
+  5      END AS Remarks
+  6  FROM Student
+  7  JOIN Result ON Student.Student_ID = Result.Student_ID
+  8  JOIN Assessment ON Result.Assessment_ID = Assessment.Assessment_No
+  9  JOIN Module ON Assessment.Module_ID = Module.Module_ID
+ 10  WHERE Module.Module_Name = 'Database'
+ 11  GROUP BY Student.Student_Name;
+
+STUDENT_NAME                   REMARK
+------------------------------ ------
+Satish Chad                    Passed
+
+SQL> GROUP BY Student.Student_Name;

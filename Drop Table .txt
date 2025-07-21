@@ -1,0 +1,34 @@
+
+SQL> Drop Table Announcement;
+
+Table dropped.
+
+SQL> Drop Table Result;
+
+Table dropped.
+
+SQL> Drop Table Assessment;
+
+Table dropped.
+
+SQL> Drop Table "Resource";
+
+Table dropped.
+
+SQL> Drop Table Teacher;
+
+Table dropped.
+
+SQL> Drop Table Module;
+
+Table dropped.
+
+SQL> Drop Table Student;
+
+Table dropped.
+
+SQL> Drop Table Program;
+
+Table dropped.
+
+SQL>

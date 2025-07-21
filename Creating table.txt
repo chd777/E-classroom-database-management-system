@@ -1,0 +1,89 @@
+
+SQL> connect
+Enter user-name: santosh_singh_chad
+Enter password:
+Connected.
+
+SQL> CREATE TABLE Program (
+  2      Program_ID NUMBER(20) PRIMARY KEY,        
+  3      Program_Name CHAR(20) NOT NULL,           
+  4      Duration NUMBER(10) NOT NULL             
+  5  );
+
+Table created.
+
+SQL> CREATE TABLE Student (
+  2      Student_ID NUMBER(20) PRIMARY KEY,            
+  3      Student_Name CHAR(30) NOT NULL,               
+  4      Student_Address CHAR(40) NOT NULL,            
+  5      Date_of_birth DATE NOT NULL,                  
+  6      Email CHAR(50) UNIQUE,                       
+  7      Program_ID NUMBER(20),                        
+  8      CONSTRAINT fk_program FOREIGN KEY (Program_ID) REFERENCES Program (Program_ID)  
+  9  );
+
+Table created.
+
+SQL> CREATE TABLE Module (
+  2      Module_ID NUMBER(10) PRIMARY KEY,        
+  3      Program_ID NUMBER(20),                  
+  4      Module_Name CHAR(20) NOT NULL,            
+  5      Credit_Hour NUMBER(10) NOT NULL,          
+  6      CONSTRAINT fk_program_module FOREIGN KEY (Program_ID) REFERENCES Program (Program_ID)  
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE Teacher (
+  2      Teacher_ID NUMBER(10) PRIMARY KEY,         
+  3      Module_ID NUMBER(10),                      
+  4      Teacher_Name CHAR(20) NOT NULL,            
+  5      Contact_Number NUMBER(10) UNIQUE,          
+  6      Email CHAR(20) UNIQUE,                      
+  7      CONSTRAINT fk_module_teacher FOREIGN KEY (Module_ID) REFERENCES Module (Module_ID) 
+  8  );
+
+Table created.
+
+
+     CREATE TABLE "Resource" (
+  2      Resource_ID NUMBER(10) PRIMARY KEY,
+  3      Module_ID NUMBER(10),
+  4      Resource_Name CHAR(20) NOT NULL,
+  5      Resource_Type CHAR(20) NOT NULL,
+  6      CONSTRAINT fk_module_resource FOREIGN KEY (Module_ID) REFERENCES Module (Module_ID)   );
+
+Table created.
+
+SQL> CREATE TABLE Assessment (
+  2      Assessment_No NUMBER(20) PRIMARY KEY,       
+  3      Module_ID NUMBER(20),                       
+  4      Assessment_Title CHAR(30) UNIQUE,           
+  5      Deadline CHAR(20) NOT NULL,                 
+  6      CONSTRAINT fk_module_assessment FOREIGN KEY (Module_ID) REFERENCES Module (Module_ID)  
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE Result (
+  2      Result_ID NUMBER(20) PRIMARY KEY,            
+  3      Grade CHAR(20) NOT NULL,                     
+  4      Total_Marks NUMBER(20) NOT NULL,             
+  5      Assessment_ID NUMBER(20),                    
+  6      Student_ID NUMBER(20),                       
+  7      CONSTRAINT fk_assessment_result FOREIGN KEY (Assessment_ID) REFERENCES Assessment (Assessment_No),  
+  8      CONSTRAINT fk_student_result FOREIGN KEY (Student_ID) REFERENCES Student (Student_ID)  
+  9  );
+
+Table created.
+
+SQL> CREATE TABLE Announcement (
+  2      Announcement_ID NUMBER(10) PRIMARY KEY,      
+  3      Student_ID NUMBER(10),                        
+  4      Announcement_Title CHAR(20) UNIQUE,           
+  5      CONSTRAINT fk_student_announcement FOREIGN KEY (Student_ID) REFERENCES Student (Student_ID)  
+  6  );
+
+Table created.
+
+SQL>

@@ -1,0 +1,67 @@
+SQL> SELECT Program.Program_Name, COUNT(Student.Student_ID) AS Total_Students
+  2  FROM Program
+  3  JOIN Student ON Program.Program_ID = Student.Program_ID
+  4  GROUP BY Program.Program_Name;
+
+PROGRAM_NAME                                                                                        TOTAL_STUDENTS
+-------------------------------------------------------------------------------------------------- -----------
+ACCA                                                                                                             1
+A level                                                                                                          1
+Computing                                                                                                        2
+Multimedia                                                                                                       1
+AI                                                                                                             1
+Networking                                                                                                       1
+
+6 rows selected.
+
+SQL> SELECT Announcement_Title, Announcement_ID
+  2  FROM Announcement
+  3  WHERE Announcement_Date >= TO_DATE('01-MAY-2024', 'DD-MON-YYYY')
+  4  AND Announcement_Date <= TO_DATE('28-MAY-2024', 'DD-MON-YYYY');
+
+ANNOUNCEMENT_TITLE                                                  ANNOUNCEMENT_ID
+-------------------------------------------------------------------------------------------------- -----------
+Test Announcement                                                                 8
+
+SQL> SELECT M.Module_Name, COUNT(R.Resource_ID) AS Total_Resources
+  2  FROM Module M
+  3  LEFT OUTER JOIN "Resource" R ON M.Module_ID = R.Module_ID
+  4  WHERE M.Module_Name LIKE 'D%'
+  5  GROUP BY M.Module_Name;
+
+MODULE_NAME                                                                   TOTAL_RESOURCES
+-------------------------------------------------------------------------------------------------- -----------
+Database                                                                                    1
+
+SQL> SELECT Student.Student_Name, Program.Program_Name
+  2  FROM Student
+  3  JOIN Program ON Student.Program_ID = Program.Program_ID
+  4  WHERE NOT EXISTS (
+  5    SELECT 1
+  6    FROM Result
+  7    WHERE Result.Student_ID = Student.Student_ID
+  8    AND Result.ASSESSMENT_ID = 101
+  9  );
+
+STUDENT_NAME                                                                 PROGRAM_NAME
+--------------------------------------------------------------------------------------------------
+Hari Prasad                                                                  A level
+Santosh Singh                                                                Computing
+Maya Sharma                                                                  ACCA
+Sita Rai                                                                     Networking
+Satish Chad                                                                  Multimedia
+Shyam                                                                        Computing
+Ram                                                                          AI
+
+7 rows selected.
+
+SQL> SELECT T.Teacher_Name
+  2  FROM Teacher T
+  3  JOIN Teacher_Module TM ON T.Teacher_ID = TM.Teacher_ID
+  4  JOIN Module M ON TM.Module_ID = M.Module_ID
+  5  GROUP BY T.Teacher_Name
+  6  HAVING COUNT(DISTINCT M.Module_ID) > 1;
+
+TEACHER_NAME
+--------------------------------------------------------------------------------------------------
+Dipeshor silwal
